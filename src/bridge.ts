@@ -545,7 +545,7 @@ function setByNameImpl(name: string, arg: unknown): string {
       log.debug(`setByName ${name} not implemented (phase 2)`);
       return "";
     default:
-      log.debug(`setByName ${name} ignored`, arg);
+      log.debug(`setByName ${name} ignored`);
       return "";
   }
 }
@@ -639,7 +639,7 @@ function getByNameImpl(name: string, arg: unknown): unknown {
     case "fullscreen":
       return globalThis.document?.fullscreenElement ? "Y" : "N";
     case "app-name":
-      return "RustDesk";
+      return "WorkDesk";
     case "build_date":
       return "web";
     case "local_os":
@@ -725,7 +725,7 @@ function getByNameImpl(name: string, arg: unknown): unknown {
     case "account_auth_result":
       return "";
     default:
-      log.debug(`getByName ${name} ignored`, arg);
+      log.debug(`getByName ${name} ignored`);
       return "";
   }
 }

@@ -16,7 +16,7 @@ if [ -z "${SOURCE_URL:-}" ] && ! git diff --quiet HEAD --; then
   echo "uncommitted changes: commit them or set SOURCE_URL explicitly" >&2
   exit 1
 fi
-SOURCE_URL=${SOURCE_URL:-https://github.com/temandroid/rustdesk-web/tree/$COMMIT}
+SOURCE_URL=${SOURCE_URL:-https://github.com/Ismagulovne/workdesk-web/tree/$COMMIT}
 case "$SOURCE_URL" in
   https://*) ;;
   *) echo "SOURCE_URL must be an https URL" >&2; exit 1 ;;

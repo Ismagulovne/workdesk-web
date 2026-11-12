@@ -3,7 +3,7 @@
 // web_model.dart calls init() and waits for onInitFinished()).
 import { getByName, refreshCodecProbe, setByName } from "./bridge";
 import { initCrypto } from "./crypto";
-import { applyRuntimeConfig } from "./config";
+import { PeerStore, applyRuntimeConfig } from "./config";
 import { log } from "./log";
 import { VERSION } from "./version";
 import { sessions } from "./sessions";
@@ -49,10 +49,34 @@ g.setByName = (name: string, arg?: unknown) => {
 
 g.getByName = (name: string, arg?: unknown) => getByName(name, arg ?? "");
 
+// WorkDesk: the console opens /web/?peer=<ID>&name=<computer>. The device is
+// put at the top of the recent list so the user connects with one click and
+// still types the device password. Only a numeric ID and a display name are
+// accepted; nothing else (server, key) can be set from the URL.
+function addPeerFromUrl(): void {
+  try {
+    const q = new URLSearchParams(globalThis.location?.search ?? "");
+    const id = (q.get("peer") ?? "").replace(/\s/g, "");
+    if (!/^\d{6,12}$/.test(id)) return;
+    const name = (q.get("name") ?? "").replace(/[\u0000-\u001f<>]/g, "").slice(0, 64);
+    const store = new PeerStore(id);
+    const old = store.info();
+    store.setInfo({
+      id, username: old?.username ?? "", hostname: old?.hostname || name, platform: old?.platform ?? "",
+      alias: old?.alias || name, tags: old?.tags ?? [], lastConnected: Date.now(),
+    });
+    globalThis.history?.replaceState(null, "", globalThis.location.pathname);
+    log.info(`peer ${id} added from the console link`);
+  } catch (e) {
+    log.warn("peer link ignored", e);
+  }
+}
+
 g.init = () => {
   void (async () => {
     try {
       applyRuntimeConfig();
+      addPeerFromUrl();
       await initCrypto();
       await refreshCodecProbe();
       ready = true;

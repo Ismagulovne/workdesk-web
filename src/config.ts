@@ -189,6 +189,9 @@ export class PeerStore {
     }
   }
   setHashedPassword(p: Uint8Array | null): void {
+    // WorkDesk: the stored hash is password-equivalent, so it is never kept in
+    // browser storage (shared PCs, XSS). Any old value is wiped.
+    p = null;
     if (!p || p.length === 0) {
       this.options.set("password", "");
       return;
