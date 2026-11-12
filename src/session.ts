@@ -345,8 +345,10 @@ export class Session {
 
   // Rust get_webrtc_enabled(): local option "enable-webrtc". The web shell's
   // checkbox treats unset as on, so do the same here.
+  // WorkDesk: WebRTC only when explicitly enabled ("Y"); otherwise relay only and
+  // no requests to public STUN servers.
   private webrtcEnabled(): boolean {
-    if (localOptions.get("enable-webrtc") === "N") return false;
+    if (localOptions.get("enable-webrtc") !== "Y") return false;
     return typeof (globalThis as { RTCPeerConnection?: unknown }).RTCPeerConnection === "function";
   }
 
@@ -492,11 +494,12 @@ export class Session {
       this.host.emit("fingerprint", { fingerprint: pkToFingerprint(this.peerSignPk) });
     }
     if (!this.secured) {
-      const ok = await this.confirmInsecure();
-      if (!ok) {
-        this.close(false);
-        return;
-      }
+      // WorkDesk: never send login data over a connection without end-to-end
+      // encryption (wrong server key or a tampered relay). Fail closed.
+      log.error("end-to-end encryption unavailable; connection refused");
+      this.msgbox("error", "Insecure Connection", "conn-e2ee-unavailable-tip");
+      this.close(false);
+      return;
     }
     this.state = "wait-hash";
     await this.msgLoop(conn);
