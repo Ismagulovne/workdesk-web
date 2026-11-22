@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveLang, translate } from "../src/lang";
+import { brand, resolveLang, translate } from "../src/lang";
 
 describe("lang (port of src/lang.rs)", () => {
   it("follows the saved language, then the browser locale", () => {
@@ -25,5 +25,17 @@ describe("lang (port of src/lang.rs)", () => {
 describe("lang placeholders are literal", () => {
   it("keeps $ patterns in the value as they are", () => {
     expect(translate("en", "{$&$'} sessions", "")).toContain("$&$'");
+  });
+});
+
+describe("brand WorkDesk", () => {
+  it("shows WorkDesk instead of the original product name", () => {
+    expect(translate("ru-RU", "Confirm RustDesk password", "")).not.toMatch(/RustDesk/);
+    expect(translate("en", "About RustDesk", "")).toBe("About WorkDesk");
+  });
+  it("keeps server product names and the based-on notice", () => {
+    expect(brand("RustDesk Server Pro")).toBe("RustDesk Server Pro");
+    expect(brand("Основано на RustDesk")).toBe("Основано на RustDesk");
+    expect(brand("Показать RustDesk")).toBe("Показать WorkDesk");
   });
 });

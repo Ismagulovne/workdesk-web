@@ -29,10 +29,15 @@ function extractPlaceholder(input: string): [string, string | null] {
   return [input.replace(m[0], "{}"), m[1] ?? ""];
 }
 
+// WorkDesk: the product name in every UI string, like src/lang.rs replaces it with the app name.
+// Mentions of the original project's server products and the "based on" notice stay as they are.
+const BRAND = /(?<!Основано на |Based on |OSS-сервере |OSS server )RustDesk(?! Server Pro)/g;
+export const brand = (s: string): string => s.replace(BRAND, "WorkDesk");
+
 export function translate(locale: string, text: string, saved = localOptions.get("lang")): string {
   const lang = resolveLang(saved, locale || globalThis.navigator?.language || "");
   const [name, value] = extractPlaceholder(text);
-  const fill = (s: string) => (value !== null ? s.replace("{}", () => value) : s);
+  const fill = (s: string) => brand(value !== null ? s.replace("{}", () => value) : s);
   const v = (TABLES[lang] ?? TABLES.en!)[name];
   if (v) return fill(v);
   if (lang !== "en") {
