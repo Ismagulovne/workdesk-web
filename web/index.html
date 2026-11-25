@@ -31,10 +31,10 @@
   <script src="js/rustdesk-web-core.js"></script>
   <style>
     html, body { margin: 0; padding: 0; height: 100%; background: #F6F4FE; }
-    @media (prefers-color-scheme: dark) { html, body { background: #0F0D1A; } .loader { border-color: #2D2945; border-top-color: #8C74FF; } }
     .loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
     .loader { width: 64px; height: 64px; border: 6px solid #E6E3F2; border-top-color: #4B2BE0; border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
+    @media (prefers-color-scheme: dark) { html, body { background: #0F0D1A; } .loader { border-color: #2D2945; border-top-color: #8C74FF; } }
     /* AGPL-3.0 section 13: offer the source of the version being served. */
     #rd-source { position: fixed; left: 6px; bottom: 4px; z-index: 10; font: 11px sans-serif; color: #888; opacity: .7; text-decoration: none; }
     #rd-source:hover { opacity: 1; text-decoration: underline; }
