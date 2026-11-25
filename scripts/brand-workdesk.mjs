@@ -40,6 +40,9 @@ exact('common.dart', [
   // светлая тема
   ['hoverColor: Color.fromARGB(255, 224, 224, 224),', 'hoverColor: Color(0xFFEEEAFD),'],
   ['    scaffoldBackgroundColor: Colors.white,', '    scaffoldBackgroundColor: Color(0xFFF6F4FE),'],
+  // полоса заголовка — как шапка сайта: фирменный фиолетовый, белый текст (светлая и тёмная тема)
+  ['    appBarTheme: AppBarTheme(\n      shadowColor: Colors.transparent,',
+    '    appBarTheme: AppBarTheme(\n      shadowColor: Colors.transparent,\n      backgroundColor: Color(0xFF4B2BE0),\n      foregroundColor: Colors.white,', 2],
   // светлые рамки и подсветка (ColorThemeExtension.light)
   ['    border: Color(0xFFCCCCCC),', '    border: Color(0xFFE6E3F2),'],
   ['    border2: Color(0xFFBBBBBB),', '    border2: Color(0xFFD6D0EE),'],
