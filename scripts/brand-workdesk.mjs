@@ -29,6 +29,7 @@ function exact(rel, pairs) {
 
 // 1. Заголовок окна и вкладки браузера
 exact('main.dart', [["'${bind.mainGetAppNameSync()} Web Client V2 (Preview)'", "'${bind.mainGetAppNameSync()} WEB'"]]);
+exact('mobile/pages/home_page.dart', [['"${bind.mainGetAppNameSync()} (Preview)"', '"${bind.mainGetAppNameSync()} WEB"']]);
 
 // 2. Тема: цвета сайта
 exact('common.dart', [
@@ -55,7 +56,9 @@ exact('common.dart', [
 // 3. Синий RustDesk везде в интерфейсе — фирменный фиолетовый
 const BLUE = [
   ['0xFF0071FF', '0xFF4B2BE0'], ['0x770071FF', '0x774B2BE0'], ['0xAA0071FF', '0xAA4B2BE0'],
-  ['0xFF2C8CFF', '0xFF4B2BE0'], ['0xFF0B6EFF', '0xFF4B2BE0'],
+  ['0xFF2C8CFF', '0xFF4B2BE0'], ['0xFF0B6EFF', '0xFF4B2BE0'], ['0xff0071ff', '0xFF4B2BE0'],
+  // Colors.blue / blueAccent без оттенков ([..], .shade) — светлый фирменный фиолетовый
+  [/Colors\.blueAccent(?![\w[.])/g, 'Color(0xFF6A4CF0)'], [/Colors\.blue(?![\w[.])/g, 'Color(0xFF6A4CF0)'],
 ];
 let files = 0;
 let hits = 0;
@@ -67,8 +70,8 @@ let hits = 0;
     let s = fs.readFileSync(p, 'utf8');
     let changed = false;
     for (const [from, to] of BLUE) {
-      const n = s.split(from).length - 1;
-      if (n) { s = s.split(from).join(to); hits += n; changed = true; }
+      const n = typeof from === 'string' ? s.split(from).length - 1 : (s.match(from) || []).length;
+      if (n) { s = typeof from === 'string' ? s.split(from).join(to) : s.replace(from, to); hits += n; changed = true; }
     }
     if (changed) { fs.writeFileSync(p, s); files++; }
   }
