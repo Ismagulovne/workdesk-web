@@ -41,6 +41,8 @@ RUSTDESK_SRC="$WORK/rustdesk" npm run build
 npm test
 RUSTDESK_SRC="$WORK/rustdesk" node scripts/sync-to-flutter.mjs
 git -C "$WORK/rustdesk" apply "$ROOT/patches/rustdesk-web-shell.patch"
+# WorkDesk: цвета сайта workdesk.kz и заголовок «WorkDesk WEB»
+node "$ROOT/scripts/brand-workdesk.mjs" "$WORK/rustdesk"
 
 cd "$WORK/rustdesk/flutter"
 flutter config --no-analytics >/dev/null 2>&1 || true
